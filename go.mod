@@ -8,6 +8,8 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/google/uuid v1.2.0
 	github.com/huandu/go-sqlbuilder v1.10.0
+	github.com/kataras/iris/v12 v12.1.8 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/stretchr/testify v1.4.0
 )
