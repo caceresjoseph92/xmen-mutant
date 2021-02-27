@@ -1,7 +1,6 @@
 package persons
 
 import (
-	"errors"
 	"net/http"
 
 	xmen "xmen-mutant/internal"
@@ -31,11 +30,10 @@ func CreateHandler(commandBus command.Bus) gin.HandlerFunc {
 		))
 
 		if err != nil {
-			switch {
-			case errors.Is(err, xmen.ErrEmptyDna):
+			if err == xmen.ErrEmptyDna {
 				ctx.JSON(http.StatusBadRequest, err.Error())
 				return
-			default:
+			} else {
 				ctx.JSON(http.StatusInternalServerError, err.Error())
 				return
 			}
