@@ -54,8 +54,8 @@ func Run() error {
 
 type config struct {
 	// Server configuration
-	Host            string        `default:"localhost"`
-	Port            uint          `default:"8082"`
+	Host            string        `default:"https://mercado-libre-mutant.herokuapp.com"`
+	Port            uint          `default:""`
 	ShutdownTimeout time.Duration `default:"10s"`
 	// Database configuration
 	DbUser    string        `default:"admin"`
