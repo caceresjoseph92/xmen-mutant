@@ -66,6 +66,6 @@ type config struct {
 	DbPass    string        `default:"968ec14b"`
 	DbHost    string        `default:"us-cdbr-east-03.cleardb.com"`
 	DbPort    uint          `default:"3306"`
-	DbName    string        `default:"Magneto"`
+	DbName    string        `default:"heroku_22864ea075704db"`
 	DbTimeout time.Duration `default:"10s"`
 }
