@@ -48,10 +48,10 @@ func Run() error {
 		creating.NewIncreasePersonsCounterOnPersonCreated(increasingPersonService),
 	)
 
-	port := os.Getenv("PORT")
-	if port == ""{
-		port = cfg.Port
-	}
+	port, err := os.Getenv("PORT")
+    if err != nil {
+        port = cfg.Port
+    } 
 	ctx, srv := server.New(context.Background(), cfg.Host, port, cfg.ShutdownTimeout, commandBus)
 	return srv.Run(ctx)
 }
