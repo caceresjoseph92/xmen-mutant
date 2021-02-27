@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  xmen-api:
+    build: .
+    environment:
+      XMEN_HOST: 0.0.0.0
+      XMEN_DBHOST: mysql
+    ports:
+      - 8080:8080
+
+  mysql:
+    image: mysql:8.0.22
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_DATABASE: Magneto
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: Mercadolibre.2020
+      MYSQL_ROOT_PASSWORD: Mercadolibre.2020
+
+volumes:
+  mysql_data:
