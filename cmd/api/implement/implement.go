@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"time"
-
+	"os"
 	xmen "xmen-mutant/internal"
 	"xmen-mutant/internal/creating"
 	"xmen-mutant/internal/increasing"
@@ -48,14 +48,18 @@ func Run() error {
 		creating.NewIncreasePersonsCounterOnPersonCreated(increasingPersonService),
 	)
 
-	ctx, srv := server.New(context.Background(), cfg.Host, cfg.Port, cfg.ShutdownTimeout, commandBus)
+	port := os.Getenv("PORT")
+	if port == ""{
+		port = cfg.Port
+	}
+	ctx, srv := server.New(context.Background(), cfg.Host, port, cfg.ShutdownTimeout, commandBus)
 	return srv.Run(ctx)
 }
 
 type config struct {
 	// Server configuration
-	Host            string        `default:"https://mercado-libre-mutant.herokuapp.com"`
-	Port            uint          `default:""`
+	Host            string        `default:"localhost"`
+	Port            string          `default:"8082"`
 	ShutdownTimeout time.Duration `default:"10s"`
 	// Database configuration
 	DbUser    string        `default:"admin"`
