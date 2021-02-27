@@ -62,9 +62,9 @@ type config struct {
 	Port            string          `default:"8082"`
 	ShutdownTimeout time.Duration `default:"10s"`
 	// Database configuration
-	DbUser    string        `default:"admin"`
-	DbPass    string        `default:"Mercadolibre.2020"`
-	DbHost    string        `default:"mercado-libre-mysql.cda3rdom0c72.us-east-1.rds.amazonaws.com"`
+	DbUser    string        `default:"bf64080195e609"`
+	DbPass    string        `default:"968ec14b"`
+	DbHost    string        `default:"us-cdbr-east-03.cleardb.com"`
 	DbPort    uint          `default:"3306"`
 	DbName    string        `default:"Magneto"`
 	DbTimeout time.Duration `default:"10s"`
