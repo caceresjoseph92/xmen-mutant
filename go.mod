@@ -1,4 +1,4 @@
-module github.com/CodelyTV/go-hexagonal_http_api-course
+module xmen-mutant
 
 go 1.15
 
