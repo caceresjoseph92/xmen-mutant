@@ -1,16 +1,16 @@
 ## Prueba Tecnica - Go HTTP API - Joseph Caceres
 
-### Requirements
+### Requisitos
 
 - Go v1.15+
 - MySQL (see below).
 
-### Contents
+### Contenido
 
 Este proyecto se realizo con la finalidad de desarrollar la deteccion de mutantes por medio del adn 
 (prueba tecnica mercado libre)
 
-### Usage
+### Uso
 
 Para ejecutar la aplicacion, simplemente ejecute
 To execute the application from any lesson, just run:
@@ -34,7 +34,7 @@ Para configurar su base de datos, puede ejecutar el archivo `schema.sql`
 presente en el directorio `sql`. Se carga automáticamente si
 utiliza el archivo `docker-compose.yaml` proporcionado
 
-#### Tests
+#### Pruebas
 
 Para ejecutar todas las pruebas, simplemente ejecute:
 
