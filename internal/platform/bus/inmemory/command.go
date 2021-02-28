@@ -19,13 +19,16 @@ func NewCommandBus() *CommandBus {
 }
 
 // Dispatch implements the command.Bus interface.
-func (b *CommandBus) Dispatch(ctx context.Context, cmd command.Command) error {
+func (b *CommandBus) Dispatch(ctx context.Context, cmd command.Command) (reponse map[string]interface{}, err error) {
 	handler, ok := b.handlers[cmd.Type()]
 	if !ok {
-		return nil
+		return nil, nil
 	}
-
-	return handler.Handle(ctx, cmd)
+	result, errs := handler.Handle(ctx, cmd)
+	if errs != nil {
+		return nil, nil
+	}
+	return result, nil
 }
 
 // Register implements the command.Bus interface.

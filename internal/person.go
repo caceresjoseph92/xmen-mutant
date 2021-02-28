@@ -55,10 +55,11 @@ type Person struct {
 
 // PersonRepository defines the expected behaviour from a person storage.
 type PersonRepository interface {
-	Save(ctx context.Context, person Person) error
+	Save(ctx context.Context, person Person) (persons map[string]interface{}, err error)
+	Consult(ctx context.Context, args map[string]interface{}) (stats map[string]interface{}, err error)
 }
 
-//go:generate mockery --case=snake --outpkg=storagemocks --output=platform/storage/storagemocks --name=PersonRepository
+//mockery --case=snake --outpkg=storagemocks --output=platform/storage/storagemocks --name=PersonRepository
 
 // NewPerson creates a new person.
 func NewPerson(mutant bool, dna []string) (Person, error) {

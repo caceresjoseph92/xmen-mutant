@@ -1,6 +1,7 @@
 package persons
 
 import (
+	"fmt"
 	"net/http"
 
 	xmen "xmen-mutant/internal"
@@ -24,11 +25,11 @@ func CreateHandler(commandBus command.Bus) gin.HandlerFunc {
 			return
 		}
 
-		err := commandBus.Dispatch(ctx, creating.NewPersonCommand(
+		result, err := commandBus.Dispatch(ctx, creating.NewPersonCommand(
 			req.Mutant,
 			req.Dna,
 		))
-
+		fmt.Println(result)
 		if err != nil {
 			if err == xmen.ErrEmptyDna {
 				ctx.JSON(http.StatusBadRequest, err.Error())

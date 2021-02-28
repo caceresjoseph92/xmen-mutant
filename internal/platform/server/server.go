@@ -43,6 +43,7 @@ func New(ctx context.Context, host string, port string, shutdownTimeout time.Dur
 func (s *Server) registerRoutes() {
 	s.engine.GET("/health", health.CheckHandler())
 	s.engine.POST("/mutant", persons.CreateHandler(s.commandBus))
+	s.engine.GET("/stats", persons.ConsultHandler(s.commandBus))
 }
 
 func (s *Server) Run(ctx context.Context) error {

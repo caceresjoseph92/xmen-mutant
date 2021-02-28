@@ -19,13 +19,13 @@ func Test_PersonService_CreatePerson_RepositoryError(t *testing.T) {
 	personDna := []string{"ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"}
 
 	personRepositoryMock := new(storagemocks.PersonRepository)
-	personRepositoryMock.On("Save", mock.Anything, mock.AnythingOfType("xmen.Person")).Return(errors.New("something unexpected happened"))
+	personRepositoryMock.On("Save", mock.Anything, mock.AnythingOfType("xmen.Person")).Return(nil, errors.New("something unexpected happened"))
 
 	eventBusMock := new(eventmocks.Bus)
 
 	personService := NewPersonService(personRepositoryMock, eventBusMock)
 
-	err := personService.CreatePerson(context.Background(), personMutant, personDna)
+	_, err := personService.CreatePerson(context.Background(), personMutant, personDna)
 
 	personRepositoryMock.AssertExpectations(t)
 	eventBusMock.AssertExpectations(t)
@@ -37,14 +37,14 @@ func Test_PersonService_CreatePerson_EventsBusError(t *testing.T) {
 	personDna := []string{"ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"}
 
 	personRepositoryMock := new(storagemocks.PersonRepository)
-	personRepositoryMock.On("Save", mock.Anything, mock.AnythingOfType("xmen.Person")).Return(nil)
+	personRepositoryMock.On("Save", mock.Anything, mock.AnythingOfType("xmen.Person")).Return(nil, nil)
 
 	eventBusMock := new(eventmocks.Bus)
 	eventBusMock.On("Publish", mock.Anything, mock.AnythingOfType("[]event.Event")).Return(errors.New("something unexpected happened"))
 
 	personService := NewPersonService(personRepositoryMock, eventBusMock)
 
-	err := personService.CreatePerson(context.Background(), personMutant, personDna)
+	_, err := personService.CreatePerson(context.Background(), personMutant, personDna)
 
 	personRepositoryMock.AssertExpectations(t)
 	eventBusMock.AssertExpectations(t)
@@ -68,7 +68,7 @@ func Test_PersonService_CreatePerson_Succeed(t *testing.T) {
 
 	personService := NewPersonService(personRepositoryMock, eventBusMock)
 
-	err := personService.CreatePerson(context.Background(), personMutant, personDna)
+	_, err := personService.CreatePerson(context.Background(), personMutant, personDna)
 
 	personRepositoryMock.AssertExpectations(t)
 	eventBusMock.AssertExpectations(t)

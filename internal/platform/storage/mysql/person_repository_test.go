@@ -28,7 +28,7 @@ func Test_PersonRepository_Save_RepositoryError(t *testing.T) {
 
 	repo := NewPersonRepository(db, 1*time.Millisecond)
 
-	err = repo.Save(context.Background(), person)
+	_, err = repo.Save(context.Background(), person)
 
 	assert.NoError(t, sqlMock.ExpectationsWereMet())
 	assert.Error(t, err)
@@ -50,7 +50,7 @@ func Test_PersonRepository_Save_Succeed(t *testing.T) {
 
 	repo := NewPersonRepository(db, 1*time.Millisecond)
 
-	err = repo.Save(context.Background(), person)
+	_, err = repo.Save(context.Background(), person)
 
 	assert.NoError(t, sqlMock.ExpectationsWereMet())
 	assert.NoError(t, err)

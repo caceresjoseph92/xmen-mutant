@@ -1,23 +1,24 @@
-package creating
+package consulting
 
 import (
 	"context"
 	"errors"
 	"xmen-mutant/kit/command"
-	"xmen-mutant/kit/utils"
 )
 
-const PersonCommandType command.Type = "command.creating.person"
+const PersonCommandType command.Type = "command.consulting.person"
 
 // personCommand is the command dispatched to create a new person.
 type PersonCommand struct {
+	id     int
 	mutant bool
 	dna    []string
 }
 
-// NewPersonCommand creates a new PersonCommand.
-func NewPersonCommand(mutant bool, dna []string) PersonCommand {
+// NewPersonCommand search PersonCommand.
+func NewPersonCommand(id int, mutant bool, dna []string) PersonCommand {
 	return PersonCommand{
+		id:     id,
 		mutant: mutant,
 		dna:    dna,
 	}
@@ -28,7 +29,7 @@ func (c PersonCommand) Type() command.Type {
 }
 
 // PersonCommandHandler is the command handler
-// responsible for creating persons.
+// responsible for search persons.
 type PersonCommandHandler struct {
 	service PersonService
 }
@@ -42,23 +43,21 @@ func NewPersonCommandHandler(service PersonService) PersonCommandHandler {
 
 // Handle implements the command.Handler interface.
 func (h PersonCommandHandler) Handle(ctx context.Context, cmd command.Command) (stats map[string]interface{}, err error) {
-	createPersonCmd, ok := cmd.(PersonCommand)
-	mutant := utils.IsMutant(createPersonCmd.dna)
-	createPersonCmd.mutant = mutant
+	consultPersonCmd, ok := cmd.(PersonCommand)
+
+	args := map[string]interface{}{
+		"id":     consultPersonCmd.id,
+		"mutant": consultPersonCmd.mutant,
+		"dna":    consultPersonCmd.dna,
+	}
 
 	if !ok {
 		return nil, errors.New("unexpected command")
 	}
-
-	result, errs := h.service.CreatePerson(
-		ctx,
-		createPersonCmd.mutant,
-		createPersonCmd.dna,
-	)
-
+	stats, errs := h.service.ConsultPerson(ctx, args)
 	if errs != nil {
 		return nil, errors.New("unexpected command")
 	}
 
-	return result, nil
+	return stats, nil
 }

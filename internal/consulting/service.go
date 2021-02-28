@@ -1,4 +1,4 @@
-package creating
+package consulting
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 )
 
 // PersonService is the default PersonService interface
-// implementation returned by creating.NewPersonService.
+// implementation returned by consulting.NewPersonService.
 type PersonService struct {
 	personRepository xmen.PersonRepository
 	eventBus         event.Bus
@@ -22,19 +22,13 @@ func NewPersonService(personRepository xmen.PersonRepository, eventBus event.Bus
 	}
 }
 
-// CreatePerson implements the consulting.PersonService interface.
-func (s PersonService) CreatePerson(ctx context.Context, mutant bool, dna []string) (response map[string]interface{}, err error) {
-	person, err := xmen.NewPerson(mutant, dna)
+// ConsultPerson implements the consulting.PersonService interface.
+func (s PersonService) ConsultPerson(ctx context.Context, args map[string]interface{}) (stats map[string]interface{}, err error) {
+	response, err := s.personRepository.Consult(ctx, args)
 	if err != nil {
 		return nil, err
 	}
-
-	response, errs := s.personRepository.Save(ctx, person)
-
-	if errs != nil {
-		return nil, errs
-	}
-	s.eventBus.Publish(ctx, person.PullEvents())
+	s.eventBus.Publish(ctx, nil)
 
 	return response, nil
 }

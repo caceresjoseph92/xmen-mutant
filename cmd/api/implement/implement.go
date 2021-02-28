@@ -4,9 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"time"
 	"os"
+	"time"
 	xmen "xmen-mutant/internal"
+	"xmen-mutant/internal/consulting"
 	"xmen-mutant/internal/creating"
 	"xmen-mutant/internal/increasing"
 	"xmen-mutant/internal/platform/bus/inmemory"
@@ -38,10 +39,15 @@ func Run() error {
 	personRepository := mysql.NewPersonRepository(db, cfg.DbTimeout)
 
 	creatingPersonService := creating.NewPersonService(personRepository, eventBus)
+	consultingPersonService := consulting.NewPersonService(personRepository, eventBus)
+
 	increasingPersonService := increasing.NewPersonCounterService()
 
 	createPersonCommandHandler := creating.NewPersonCommandHandler(creatingPersonService)
+	consultPersonCommandHandler := consulting.NewPersonCommandHandler(consultingPersonService)
+
 	commandBus.Register(creating.PersonCommandType, createPersonCommandHandler)
+	commandBus.Register(consulting.PersonCommandType, consultPersonCommandHandler)
 
 	eventBus.Subscribe(
 		xmen.PersonCreatedEventType,
@@ -49,7 +55,7 @@ func Run() error {
 	)
 
 	port := os.Getenv("PORT")
-	if port == ""{
+	if port == "" {
 		port = cfg.Port
 	}
 	ctx, srv := server.New(context.Background(), cfg.Host, port, cfg.ShutdownTimeout, commandBus)
@@ -59,7 +65,7 @@ func Run() error {
 type config struct {
 	// Server configuration
 	Host            string        `default:""`
-	Port            string          `default:"8082"`
+	Port            string        `default:"8082"`
 	ShutdownTimeout time.Duration `default:"10s"`
 	// Database configuration
 	DbUser    string        `default:"bf64080195e609"`

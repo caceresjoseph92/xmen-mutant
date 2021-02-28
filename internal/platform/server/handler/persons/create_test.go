@@ -21,7 +21,7 @@ func TestHandler_Create_ServiceError(t *testing.T) {
 		"Dispatch",
 		mock.Anything,
 		mock.AnythingOfType("creating.PersonCommand"),
-	).Return(nil)
+	).Return(nil, nil)
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
