@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestHandler_Create_ServiceError(t *testing.T) {
+func TestHandler_Create_Service(t *testing.T) {
 	commandBus := new(commandmocks.Bus)
 	commandBus.On(
 		"Dispatch",
@@ -64,4 +64,63 @@ func TestHandler_Create_ServiceError(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, res.StatusCode)
 	})
+}
+
+func Example_Create_ServiceSucess() {
+	commandBus := new(commandmocks.Bus)
+	commandBus.On(
+		"Dispatch",
+		mock.Anything,
+		mock.AnythingOfType("creating.PersonCommand"),
+	).Return(nil, nil)
+	createPersonReq := createRequest{
+		Dna: []string{"ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"},
+	}
+	b, _ := json.Marshal(createPersonReq)
+
+	commandBus.On(
+		"Dispatch",
+		mock.Anything,
+		mock.AnythingOfType("creating.PersonCommand"),
+	).Return(nil, nil)
+
+	gin.SetMode(gin.TestMode)
+	r := gin.New()
+	r.POST("/mutant", CreateHandler(commandBus))
+
+	req, _ := http.NewRequest(http.MethodPost, "/mutant", bytes.NewBuffer(b))
+
+	rec := httptest.NewRecorder()
+	r.ServeHTTP(rec, req)
+}
+
+func Benchmark_Create_ServiceSucess(b *testing.B) {
+	commandBus := new(commandmocks.Bus)
+	commandBus.On(
+		"Dispatch",
+		mock.Anything,
+		mock.AnythingOfType("creating.PersonCommand"),
+	).Return(nil, nil)
+
+	for i := 0; i < b.N; i++ {
+		createPersonReq := createRequest{
+			Dna: []string{"ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"},
+		}
+		b, _ := json.Marshal(createPersonReq)
+
+		commandBus.On(
+			"Dispatch",
+			mock.Anything,
+			mock.AnythingOfType("creating.PersonCommand"),
+		).Return(nil, nil)
+
+		gin.SetMode(gin.TestMode)
+		r := gin.New()
+		r.POST("/mutant", CreateHandler(commandBus))
+
+		req, _ := http.NewRequest(http.MethodPost, "/mutant", bytes.NewBuffer(b))
+
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, req)
+	}
 }
