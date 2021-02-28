@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"sync"
 )
 
 var (
@@ -11,15 +10,7 @@ var (
 	_x string = "X"
 )
 
-func monitorWorker(wg *sync.WaitGroup, cs chan int) {
-	wg.Wait()
-	close(cs)
-}
-
 func IsMutant(dna []string) (mutant bool, err error) {
-
-	wg := &sync.WaitGroup{}
-	cs := make(chan int)
 
 	for _, value := range dna {
 		if len(dna) != len(value) {
@@ -27,22 +18,20 @@ func IsMutant(dna []string) (mutant bool, err error) {
 		}
 	}
 
-	wg.Add(4)
-	go order(dna, 0, wg, cs)
-	go order(dna, 1, wg, cs)
-	go order(dna, 2, wg, cs)
-	go order(dna, 3, wg, cs)
-	go monitorWorker(wg, cs)
+	for i := 0; i < 4; i++ {
+		order(dna, i)
+	}
 
-	if <-cs > 1 {
+	if _m > 1 {
+		_m = 0
 		return true, nil
 	} else {
+		_m = 0
 		return false, nil
 	}
 }
 
-func order(dna []string, flag int, wg *sync.WaitGroup, cs chan int) {
-	defer wg.Done()
+func order(dna []string, flag int) {
 	dnsNew := []string{}
 	switch flag {
 	case 1:
@@ -104,10 +93,10 @@ func order(dna []string, flag int, wg *sync.WaitGroup, cs chan int) {
 	default:
 		dnsNew = dna
 	}
-	executed(dnsNew, cs)
+	executed(dnsNew)
 }
 
-func executed(dna []string, cs chan int) {
+func executed(dna []string) {
 	for _, b := range dna {
 		_cm := ""
 		c := len(b)
@@ -131,5 +120,4 @@ func executed(dna []string, cs chan int) {
 			}
 		}
 	}
-	cs <- _m
 }
