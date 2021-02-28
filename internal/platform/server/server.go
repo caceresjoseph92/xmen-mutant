@@ -11,6 +11,7 @@ import (
 
 	"xmen-mutant/internal/platform/server/handler/health"
 	"xmen-mutant/internal/platform/server/handler/persons"
+	"xmen-mutant/internal/platform/server/middleware/recovery"
 	"xmen-mutant/kit/command"
 
 	"github.com/gin-gonic/gin"
@@ -41,6 +42,7 @@ func New(ctx context.Context, host string, port string, shutdownTimeout time.Dur
 }
 
 func (s *Server) registerRoutes() {
+	s.engine.Use(recovery.Middleware())
 	s.engine.GET("/health", health.CheckHandler())
 	s.engine.POST("/mutant", persons.CreateHandler(s.commandBus))
 	s.engine.GET("/stats", persons.ConsultHandler(s.commandBus))

@@ -52,7 +52,11 @@ func (r *PersonRepository) Save(ctx context.Context, person xmen.Person) (person
 		return nil, fmt.Errorf("error trying to persist person on database: %v", err)
 	}
 
-	return nil, nil
+	stateMutant := map[string]interface{}{
+		"mutant": person.Mutant().Bool(),
+	}
+
+	return stateMutant, nil
 }
 
 // Consult implements the xmen.PersonRepository interface.

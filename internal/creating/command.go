@@ -43,14 +43,17 @@ func NewPersonCommandHandler(service PersonService) PersonCommandHandler {
 // Handle implements the command.Handler interface.
 func (h PersonCommandHandler) Handle(ctx context.Context, cmd command.Command) (stats map[string]interface{}, err error) {
 	createPersonCmd, ok := cmd.(PersonCommand)
-	mutant := utils.IsMutant(createPersonCmd.dna)
+	mutant, errs := utils.IsMutant(createPersonCmd.dna)
+	if errs != nil {
+		return nil, errs
+	}
 	createPersonCmd.mutant = mutant
 
 	if !ok {
 		return nil, errors.New("unexpected command")
 	}
 
-	result, errs := h.service.CreatePerson(
+	response, errs := h.service.CreatePerson(
 		ctx,
 		createPersonCmd.mutant,
 		createPersonCmd.dna,
@@ -60,5 +63,5 @@ func (h PersonCommandHandler) Handle(ctx context.Context, cmd command.Command) (
 		return nil, errors.New("unexpected command")
 	}
 
-	return result, nil
+	return response, nil
 }

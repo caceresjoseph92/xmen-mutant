@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"sync"
 )
 
@@ -15,9 +16,16 @@ func monitorWorker(wg *sync.WaitGroup, cs chan int) {
 	close(cs)
 }
 
-func IsMutant(dna []string) bool {
+func IsMutant(dna []string) (mutant bool, err error) {
+
 	wg := &sync.WaitGroup{}
 	cs := make(chan int)
+
+	for _, value := range dna {
+		if len(dna) != len(value) {
+			return false, errors.New("array does not meet size nxn")
+		}
+	}
 
 	wg.Add(4)
 	go order(dna, 0, wg, cs)
@@ -27,9 +35,9 @@ func IsMutant(dna []string) bool {
 	go monitorWorker(wg, cs)
 
 	if <-cs > 1 {
-		return true
+		return true, nil
 	} else {
-		return false
+		return false, nil
 	}
 }
 

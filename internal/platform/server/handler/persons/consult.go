@@ -5,6 +5,7 @@ import (
 
 	"xmen-mutant/internal/consulting"
 	"xmen-mutant/kit/command"
+	"xmen-mutant/kit/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,15 +14,16 @@ import (
 func ConsultHandler(commandBus command.Bus) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		result, err := commandBus.Dispatch(ctx, consulting.NewPersonCommand(
-			3,
+			0,
 			false,
-			[]string{"ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"},
+			nil,
 		))
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, err.Error())
+			ctx.JSON(http.StatusInternalServerError, utils.CreateResponse(err))
 			return
 		}
 		ctx.Status(http.StatusCreated)
-		ctx.JSON(http.StatusOK, result)
+		ctx.JSON(http.StatusOK, utils.CreateResponse(result))
+
 	}
 }

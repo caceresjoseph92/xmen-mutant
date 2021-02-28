@@ -1,12 +1,12 @@
 package persons
 
 import (
-	"fmt"
 	"net/http"
 
 	xmen "xmen-mutant/internal"
 	"xmen-mutant/internal/creating"
 	"xmen-mutant/kit/command"
+	"xmen-mutant/kit/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,22 +24,26 @@ func CreateHandler(commandBus command.Bus) gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
+		if req.Dna == nil {
+			ctx.JSON(http.StatusBadRequest, utils.CreateResponse("required dna field"))
+			return
+		}
 
-		result, err := commandBus.Dispatch(ctx, creating.NewPersonCommand(
+		response, err := commandBus.Dispatch(ctx, creating.NewPersonCommand(
 			req.Mutant,
 			req.Dna,
 		))
-		fmt.Println(result)
+
 		if err != nil {
 			if err == xmen.ErrEmptyDna {
-				ctx.JSON(http.StatusBadRequest, err.Error())
+				ctx.JSON(http.StatusBadRequest, utils.CreateResponse(err.Error()))
 				return
 			} else {
-				ctx.JSON(http.StatusInternalServerError, err.Error())
+				ctx.JSON(http.StatusForbidden, utils.CreateResponse(err))
 				return
 			}
 		}
-		ctx.JSON(http.StatusOK, "creado exitosamente")
+		ctx.JSON(http.StatusOK, utils.CreateResponse(response["mutant"]))
 		ctx.Status(http.StatusCreated)
 	}
 }
