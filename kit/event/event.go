@@ -15,7 +15,7 @@ type Bus interface {
 	Subscribe(Type, Handler)
 }
 
-//go:generate mockery --case=snake --outpkg=eventmocks --output=eventmocks --name=Bus
+//mockery --case=snake --outpkg=eventmocks --output=eventmocks --name=Bus
 
 // Handler defines the expected behaviour from an event handler.
 type Handler interface {
