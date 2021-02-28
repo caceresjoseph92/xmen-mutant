@@ -10,7 +10,7 @@ type Bus interface {
 	Register(Type, Handler)
 }
 
-//go:generate mockery --case=snake --outpkg=commandmocks --output=commandmocks --name=Bus
+//mockery --case=snake --outpkg=commandmocks --output=commandmocks --name=Bus
 
 // Type represents an application command type.
 type Type string

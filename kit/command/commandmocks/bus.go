@@ -4,7 +4,6 @@ package commandmocks
 
 import (
 	context "context"
-
 	command "xmen-mutant/kit/command"
 
 	mock "github.com/stretchr/testify/mock"
@@ -16,17 +15,26 @@ type Bus struct {
 }
 
 // Dispatch provides a mock function with given fields: _a0, _a1
-func (_m *Bus) Dispatch(_a0 context.Context, _a1 command.Command) error {
+func (_m *Bus) Dispatch(_a0 context.Context, _a1 command.Command) (map[string]interface{}, error) {
 	ret := _m.Called(_a0, _a1)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, command.Command) error); ok {
+	var r0 map[string]interface{}
+	if rf, ok := ret.Get(0).(func(context.Context, command.Command) map[string]interface{}); ok {
 		r0 = rf(_a0, _a1)
 	} else {
-		r0 = ret.Error(0)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(map[string]interface{})
+		}
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, command.Command) error); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // Register provides a mock function with given fields: _a0, _a1

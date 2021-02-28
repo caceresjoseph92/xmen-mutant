@@ -39,7 +39,7 @@ func CreateHandler(commandBus command.Bus) gin.HandlerFunc {
 				return
 			}
 		}
-
+		ctx.JSON(http.StatusOK, "creado exitosamente")
 		ctx.Status(http.StatusCreated)
 	}
 }

@@ -1,7 +1,6 @@
 package persons
 
 import (
-	"fmt"
 	"net/http"
 
 	"xmen-mutant/internal/consulting"
@@ -22,7 +21,7 @@ func ConsultHandler(commandBus command.Bus) gin.HandlerFunc {
 			ctx.JSON(http.StatusInternalServerError, err.Error())
 			return
 		}
-		fmt.Println(result)
 		ctx.Status(http.StatusCreated)
+		ctx.JSON(http.StatusOK, result)
 	}
 }
