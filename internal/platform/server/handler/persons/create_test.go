@@ -27,10 +27,8 @@ func TestHandler_Create_ServiceError(t *testing.T) {
 	r := gin.New()
 	r.POST("/mutant", CreateHandler(commandBus))
 
-	t.Run("given an invalid request it returns 400", func(t *testing.T) {
-		createPersonReq := createRequest{
-			Dna: []string{"ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"},
-		}
+	t.Run("given an invalid request it returns 403", func(t *testing.T) {
+		createPersonReq := createRequest{}
 
 		b, err := json.Marshal(createPersonReq)
 		require.NoError(t, err)
@@ -44,10 +42,10 @@ func TestHandler_Create_ServiceError(t *testing.T) {
 		res := rec.Result()
 		defer res.Body.Close()
 
-		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+		assert.Equal(t, http.StatusForbidden, res.StatusCode)
 	})
 
-	t.Run("given a valid request it returns 201", func(t *testing.T) {
+	t.Run("given a valid request it returns 200", func(t *testing.T) {
 		createPersonReq := createRequest{
 			Dna: []string{"ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"},
 		}
@@ -64,6 +62,6 @@ func TestHandler_Create_ServiceError(t *testing.T) {
 		res := rec.Result()
 		defer res.Body.Close()
 
-		assert.Equal(t, http.StatusCreated, res.StatusCode)
+		assert.Equal(t, http.StatusOK, res.StatusCode)
 	})
 }

@@ -21,11 +21,11 @@ func CreateHandler(commandBus command.Bus) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req createRequest
 		if err := ctx.BindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, err.Error())
+			ctx.JSON(http.StatusForbidden, err.Error())
 			return
 		}
 		if req.Dna == nil {
-			ctx.JSON(http.StatusBadRequest, utils.CreateResponse("required dna field"))
+			ctx.JSON(http.StatusForbidden, utils.CreateResponse("required dna field"))
 			return
 		}
 

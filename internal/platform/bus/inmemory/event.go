@@ -2,6 +2,7 @@ package inmemory
 
 import (
 	"context"
+	"errors"
 
 	"xmen-mutant/kit/event"
 )
@@ -23,7 +24,7 @@ func (b *EventBus) Publish(ctx context.Context, events []event.Event) error {
 	for _, evt := range events {
 		handlers, ok := b.handlers[evt.Type()]
 		if !ok {
-			return nil
+			return errors.New("something unexpected happened on the bus")
 		}
 
 		for _, handler := range handlers {
